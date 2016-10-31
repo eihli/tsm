@@ -2,7 +2,7 @@
 
 Helper for handling API to API integrations.
 
-![UML Diagram](/diagrams/tsm.svg)
+![UML Diagram](/diagrams/tsm.png)
 
 ## Major Classes
 
