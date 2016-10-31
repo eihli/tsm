@@ -2,6 +2,8 @@
 
 Helper for handling API to API integrations.
 
+![UML Diagram](/diagrams/tsm.svg)
+
 ## Major Classes
 
 ### WorkerManager
@@ -66,3 +68,12 @@ Helper for handling API to API integrations.
     - Verify work
     - Handle result and update state to success/failed
 - Return result (if necessary) for WorkerManager aggregation
+
+
+# Appendix
+
+## Graphviz DOT and VIM
+
+I'm using this repo as an excuse to try out UML diagramming with [Graphviz](http://www.graphviz.org/).
+
+There is a [cool vim plugin](https://github.com/wannesm/wmgraphviz.vim) which gives you some handy shortcuts to automatically compile and view DOT files.
