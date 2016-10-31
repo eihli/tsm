@@ -11,11 +11,12 @@ Helper for handling API to API integrations.
 - Has many workers
 - Responsible for enqueueing workers in order and handling worker exceptions
 - Aggregates workers results
+- Can use results from previous workers as arguments to instantiate later workers
 
 ### Worker
 
 - Belongs to a WorkerManager
-- Has one state saved in an in-memory store
+- Has state saved in an in-memory store
 - Is enqueued for background work
 - Succeeds or fails, updates state, returns data for WorkerManager aggregation
 
