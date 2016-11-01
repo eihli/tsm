@@ -1,90 +1,96 @@
 digraph G {
   graph [dpi=500]
 
-    fontname = "Bitstream Vera Sans"
-    fontsize = 8
+  fontname = "Bitstream Vera Sans"
+  fontsize = 8
 
-    node [
-    fontname = "Bitstream Vera Sans"
-      fontsize = 8
-      shape = "record"
-    ]
+  node [
+  fontname = "Bitstream Vera Sans";
+  fontsize = 8;
+  shape = "record";
+  ]
 
-    edge [
-    fontname = "Bitstream Vera Sans"
-      fontsize = 8
-    ]
+  edge [
+  fontname = "Bitstream Vera Sans";
+  fontsize = 8;
+  ]
 
-    PersistenceManager [
-    label = "{PersistenceManager}"
-    ]
+  PersistenceManager [
+  label = "{PersistenceManager}"
+  ]
 
-    Cache [
-    label = "{Cache|Redis/MemCache/Etc...}"
-    ]
+  Cache [
+  label = "{Cache|Redis/MemCache/Etc...}"
+  ]
 
-    Database [
-    label = "{Database|PostgreSQL/MySQL/Etc...}"
-    ]
+  Database [
+  label = "{Database|PostgreSQL/MySQL/Etc...}"
+  ]
 
-    WorkerManager [
-    label = "{WorkerManager|+ job_identifier : String\l|}"
-    ]
+  WorkerManager [
+  label = "{WorkerManager|+ job_identifier : String\l|}"
+  ]
 
-    Worker [
-    label = "{Worker|+ args : Array\l+ state : WorkerState\l|+ perform(s: Object) : Object\l}"
-    ]
+  Worker [
+  label = "{Worker|+ args : Array\l+ state : WorkerState\l|+ perform(s: Object) : Object\l}"
+  ]
 
-    WorkerState [
-    label = "{WorkerState|+ state : String\l+ payload : Hash|}"
-    ]
+  WorkerState [
+  label = "{WorkerState|+ state : String\l+ payload : Hash|}"
+  ]
 
-    edge [
-    arrowhead = "none"
-    ]
+  EventService [
+  label = "{EventService|||Responsibilities:\lEvent bus for Workers/WorkerManagers\l}"
+  ]
 
-    PersistenceManager -> Cache
-    PersistenceManager -> Database
+  edge [
+  arrowhead = "none"
+  ]
 
-    PersistenceLayer [
-    shape = circle;
+  PersistenceManager -> Cache
+  PersistenceManager -> Database
+
+  PersistenceLayer [
+  shape = circle;
   width = .01;
   height = .01;
   label = "";
-    ]
+  ]
 
-      edge [
-      style = "dotted"
-      ]
+  edge [
+  style = "dotted";
+  ]
 
-      {WorkerManager Worker, WorkerState, JobManager} -> PersistenceLayer
+  {WorkerManager, Worker, WorkerState, JobManager} -> PersistenceLayer;
 
-    edge [
-      arrowhead = "onormal"
-        style = "dotted"
-    ]
+  edge [
+    arrowhead = "onormal";
+  style = "dotted";
+  ]
 
-    PersistenceLayer -> PersistenceManager
+  PersistenceLayer -> PersistenceManager
+  WorkerManager -> EventService
+  Worker -> EventService
 
-    edge [
-    arrowhead = "onormal"
-      style = "solid"
-      headlabel = "1..*"
-      minlen = "2"
-      labeldistance = "1.5"
-    ]
+  edge [
+  arrowhead = "onormal";
+  style = "solid";
+  headlabel = "1..*";
+  minlen = "2";
+  labeldistance = "1.5";
+  ]
 
-    WorkerManager -> Worker
+  WorkerManager -> Worker
 
-    edge [
-    headlabel = "1"
-    ]
+  edge [
+  headlabel = "1"
+  ]
 
-    WorkerState -> Worker
+  WorkerState -> Worker
 
-    JobManager [
-    label = "{JobManager||+ create_jobs(d: Iterable) : void\l|Responsibilities:\lParse JobDefinition\lPersists Workers and a WorkerManager.\lAssigns UUIDs to Workers for tracking state in Cache.\l}"
-    ]
+  JobManager [
+  label = "{JobManager||+ create_jobs(d: Iterable) : void\l|Responsibilities:\lParse JobDefinition\lPersists Workers and a WorkerManager.\lAssigns UUIDs to Workers for tracking state in Cache.\l}"
+  ]
 
 }
 
