@@ -40,6 +40,10 @@ Helper for handling API to API integrations.
 
 - Used by Worker to determine success/failure of work
 
+### EventStore | MessageQueue
+
+- Pubsub service for Workers and WorkerManagers to communicate
+
 ## Workflow
 
 ### App and WorkerManagers
