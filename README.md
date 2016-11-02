@@ -12,6 +12,10 @@ Helper for handling API to API integrations.
 - Responsible for enqueueing workers in order and handling worker exceptions
 - Aggregates workers results
 - Can use results from previous workers as arguments to instantiate later workers
+- Listen to workers
+  - http://stackoverflow.com/questions/6463945/whats-the-most-efficient-node-js-inter-process-communication-library-method
+  - https://www.devco.net/archives/2013/01/06/solving-monitoring-state-storage-problems-using-redis.php
+  - http://kschiess.github.io/cod/
 
 ### Worker
 
