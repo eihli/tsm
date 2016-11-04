@@ -1,22 +1,32 @@
-require_relative './persistence_manager'
+require_relative './lib/notification_service'
 
 class Worker
   attr_reader :state_key, :args, :pm
 
   def initialize(state_key, *args)
-    @pm = PersistenceManager.instance
+    @notification_service = NotificationService.instance
     @state_key = state_key
     @args = *args
   end
 
   def perform(subject)
-    @pm.set(@state_key, 'started')
+    @notification_service.notify({
+      status: 'started',
+      started_key: 'started_value'
+    })
 
     did_something = do_something
+
     if did_something
-      @pm.set(@state_key, 'success')
+      @notification_service.notify({
+        status: 'success',
+        success_key: 'success_value'
+      })
     else
-      @pm.set(@state_key, 'failed')
+      @notification_service.notify({
+        status: 'failure',
+        failure_key: 'failure_value'
+      })
     end
 
     # Either mutate subject passed in or return
@@ -26,6 +36,10 @@ class Worker
 
   def do_something
     Random.rand > 0.9
+  end
+
+  def notify(message, payload)
+    @notification_service.notify(@state_key, payload)
   end
 end
 
