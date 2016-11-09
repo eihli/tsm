@@ -2,6 +2,37 @@
 
 Helper for handling API to API integrations.
 
+## The Problem
+
+- Your integration workflow requires making a large number of long-running requests to many different APIs
+- Some of those requests can happen in parallel, others must happen in series
+- Requests can fail for many reasons, some failures are retriable, some failures should be sent to the user, some logged for developers
+- The background jobs which are making these requests can fail at any time
+- You cannot lose data, nor do you want duplicate requests to be made
+
+## The Solution
+
+- Each request happens in a single worker process (Redis/Resque/DelayedJob/Celery/Etc...)
+  - This keeps a single long-running 'job' with many requests from blocking the entire queue
+- Workers persist their state (in-memory cache)
+  - At the start of their 'perform' method
+    - If their status is already 'started'
+      - It means they were started at some point in the past but the process died before verification
+      - Handle a restart by checking to see if the work completed
+    - Else, they update their state to 'started'
+  - After their work has been completed and verified
+    - They update their state to 'success' or 'failure'
+    - They persist their result, either some 'payload' object, or an error message
+- WorkerManagers enqueue and subscribe to updates from workers
+  - Handle the ordering of workers - some are parallel, some series
+  - Aggregate results
+    - Some workers may have error messages that don't block success of the entire job
+    - Some workers may need to be enqueued with the results of several other workers
+- EventService
+  - Pub/Sub for Workers/WorkerManagers/Other subscribers (Logs, Status bar, Error handle...)
+- TODO:
+  - Think about how to handle retries and backoff strategy
+
 ![UML Diagram](/diagrams/tsm.png)
 
 ## Major Classes
