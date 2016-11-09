@@ -14,7 +14,7 @@ Helper for handling API to API integrations.
 
 - Each request happens in a single worker process (Redis/Resque/DelayedJob/Celery/Etc...)
   - This keeps a single long-running 'job' with many requests from blocking the entire queue
-- Workers persist their state (in-memory cache)
+- [Workers](lib/worker.rb) persist their state (in-memory cache/[PersistenceManager](lib/persistence_manager.rb))
   - At the start of their 'perform' method
     - If their status is already 'started'
       - It means they were started at some point in the past but the process died before verification
@@ -23,12 +23,12 @@ Helper for handling API to API integrations.
   - After their work has been completed and verified
     - They update their state to 'success' or 'failure'
     - They persist their result, either some 'payload' object, or an error message
-- WorkerManagers enqueue and subscribe to updates from workers
+- [WorkerManagers](lib/worker_manager.rb) enqueue and subscribe to updates from workers
   - Handle the ordering of workers - some are parallel, some series
   - Aggregate results
     - Some workers may have error messages that don't block success of the entire job
     - Some workers may need to be enqueued with the results of several other workers
-- EventService
+- [EventService](lib/notification_service.rb)
   - Pub/Sub for Workers/WorkerManagers/Other subscribers (Logs, Status bar, Error handle...)
 - TODO:
   - Think about how to handle retries and backoff strategy
