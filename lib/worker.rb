@@ -10,20 +10,24 @@ class Worker
   end
 
   def perform(subject)
-    @notification_service.notify({
+    # TODO: Handle startup procedure
+    # What if we were already started?
+    notify({
       status: 'started',
       started_key: 'started_value'
     })
 
+    # Hit some external API
     did_something = do_something
 
     if did_something
-      @notification_service.notify({
+      # TODO: Handle verification
+      notify({
         status: 'success',
         success_key: 'success_value'
       })
     else
-      @notification_service.notify({
+      notify({
         status: 'failure',
         failure_key: 'failure_value'
       })
@@ -38,7 +42,7 @@ class Worker
     Random.rand > 0.9
   end
 
-  def notify(message, payload)
+  def notify(payload)
     @notification_service.notify(@state_key, payload)
   end
 end
